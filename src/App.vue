@@ -2,9 +2,15 @@
   <div class="container">
     <div class="row justify-content-center">
       <add-appointment @add="addItem" />
-      <search-appointments />
+      <search-appointments
+        @searchRecords="searchAppointments"
+        :myKey="filterKey"
+        :myDir="filterDir"
+        @requestKey="changeKey"
+        @requestDir="changeDir"
+      />
       <appointment-list
-        :appointments="appointments"
+        :appointments="filteredApts"
         @remove="removeItem"
         @edit="editItem"
       />
@@ -25,6 +31,9 @@ export default {
     return {
       appointments: [],
       aptIndex: 0,
+      searchTerms: "",
+      filterKey: "petName",
+      filterDir: "asc",
     };
   },
   components: {
@@ -42,7 +51,36 @@ export default {
         }))
     );
   },
+  computed: {
+    searchedApts: function () {
+      return this.appointments.filter((item) => {
+        return (
+          item.petName.toLowerCase().match(this.searchTerms.toLowerCase()) ||
+          item.petOwner.toLowerCase().match(this.searchTerms.toLowerCase()) ||
+          item.aptNotes.toLowerCase().match(this.searchTerms.toLowerCase())
+        );
+      });
+    },
+    filteredApts: function () {
+      return _.orderBy(
+        this.searchedApts,
+        (item) => {
+          return item[this.filterKey].toLowerCase();
+        },
+        this.filterDir
+      );
+    },
+  },
   methods: {
+    changeKey: function (value) {
+      this.filterKey = value;
+    },
+    changeDir: function (value) {
+      this.filterDir = value;
+    },
+    searchAppointments: function (terms) {
+      this.searchTerms = terms;
+    },
     addItem: function (apt) {
       apt.aptId = this.aptIndex;
       this.aptIndex++;
