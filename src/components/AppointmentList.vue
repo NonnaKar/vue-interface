@@ -3,10 +3,13 @@
     <div class="list-group list-group-flush">
       <div
         class="list-group-item d-flex align-items-start"
-        v-for="(item, i) in appointments"
-        v-bind:key="i"
+        v-for="item in appointments"
+        :key="item.aptIndex"
       >
-        <button class="me-2 btn btn-sm btn-danger">
+        <button
+          class="me-2 btn btn-sm btn-danger"
+          @click="$emit('remove', item)"
+        >
           <font-awesome-icon icon="trash" />
         </button>
         <div class="w-100">
