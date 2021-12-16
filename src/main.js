@@ -5,7 +5,6 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-
 import {
   faPlus,
   faMinus,
