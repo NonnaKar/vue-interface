@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="row justify-content-center">
+      <add-appointment @add="addItem" />
       <appointment-list
         :appointments="appointments"
         @remove="removeItem"
@@ -11,6 +12,7 @@
 </template>
 
 <script>
+import AddAppointment from "./components/AddAppointment";
 import AppointmentList from "./components/AppointmentList";
 import _ from "lodash";
 import axios from "axios";
@@ -25,6 +27,7 @@ export default {
   },
   components: {
     AppointmentList,
+    AddAppointment,
   },
   mounted() {
     axios.get("./data/appointments.json").then(
@@ -37,6 +40,11 @@ export default {
     );
   },
   methods: {
+    addItem: function (apt) {
+      apt.aptId = this.aptIndex;
+      this.aptIndex++;
+      this.appointments.push(apt);
+    },
     removeItem: function (apt) {
       this.appointments = _.without(this.appointments, apt);
     },
